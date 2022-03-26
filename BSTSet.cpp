@@ -133,17 +133,9 @@ void BSTSet::intersection(TNode* ptr, BSTSet* temp)
 	if(!ptr){return;}
 
 	if(isIn(ptr->element)){temp->add(ptr->element);}
-		intersection(ptr->left, temp);
+		intersection(ptr->left, temp);  // DONT UNDERSTAND THIS ERROR BUT CODE WORKS ON WINDOWS
 		intersection(ptr->right, temp);
 	}
-
-//	if(!ptr){return;}
-//
-//	else if(!(ptr2->isIn(ptr->element))){
-//		remove(ptr->element);
-//	}
-//	intersection(ptr->left, ptr2);
-//	intersection(ptr->right, ptr2);
 
 void BSTSet::difference(const BSTSet& s)
 {
@@ -197,12 +189,61 @@ int BSTSet::height(TNode* ptr)
 }
 
 // create and use class MyStack
+
+class SNode
+{
+	public:
+		TNode* node;
+		SNode* next;
+
+	SNode(SNode* n, TNode* v){
+		node = v;
+		next = n;
+	}
+};
+
+class MyStack
+{
+	private:
+		SNode* head;
+	public:
+		MyStack(){head = NULL;}
+
+		bool isEmpty(){return(head == NULL);}
+		TNode* pop(){
+			if(head!=NULL){
+				SNode* temp = head;
+				TNode* output = head->node;
+				head = head->next;
+				delete temp;
+				return output;
+			}
+			else{throw std::underflow_error("stack underflow");}
+		}
+
+		void push(TNode* v){
+			head = new SNode(head, v);
+		}
+};
+
 void BSTSet::printNonRec()
 {
 	// TODO
-
-	cout << "-2"; //change this after completing this function
+	MyStack stack = MyStack();
+	TNode* ptr = root;
+	while(!(stack.isEmpty()) || ptr!=NULL){
+		if(ptr!=NULL){
+			stack.push(ptr);
+			ptr = ptr->left;
+		}
+		else{
+			ptr = stack.pop();
+			cout<<ptr->element<<",";
+			ptr = ptr->right;
+		}
+	}
 }
+
 
 // Do not modify following provided methods
 
